@@ -15,11 +15,28 @@ function App() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Feedback submitted:', formData);
-    // Add feedback submission logic here
-    alert('Thank you for your feedback!');
+    try {
+      const response = await fetch('http://localhost:8000/api/feedback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        alert('Thank you for your feedback! It has been securely saved.');
+        setFormData({ name: '', email: '', phone: '' });
+      } else {
+        alert('There was an issue submitting your feedback. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error submitting feedback:', error);
+      alert('Failed to connect to the server.');
+    }
   };
 
   return (
